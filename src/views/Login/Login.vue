@@ -43,7 +43,7 @@
   </div>
 </template>
 <script>
-// import sha1 from 'js-sha1';
+import sha1 from 'js-sha1';
 import { Message } from 'element-ui';
 import { GetSms, Register, Login } from "@/api/login";
 import { reactive, ref, isRef, toRefs, onMounted, watch } from '@vue/composition-api';
@@ -182,18 +182,34 @@ export default {
         codeButtonStatus.text = params.text;
       })
       const getSms = (() => {
-        // 进行提示
-        if(ruleForm.username == "") {
-          root.$message.error("邮箱不能为空！！！")
-          return
+        if(ruleForm.username == '' ) {
+          root.$message.error('邮箱不能为空！！');
+          return false;
         }
+        if(validateEmail(ruleForm.username)) {
+          root.$message.error('邮箱格式有误，请重新输入！！');
+          return false;
+        }
+        // 获取验证码
+        let requestData = {
+          username: ruleForm.username, 
+          module: model.value
+        }
+        // 修改获取验证按钮状态
+        updataButtonStatus({
+          status: true,
+          text: '发送中'
+        })
         GetSms({username: ruleForm.username, model: 'login'}).then(res => {
           let data = res.data
           root.$message({
             message: data.message,
-            type: 'success'
+            type: 'success',
+            dangerouslyUseHTMLString: true
           })
-          console.log(res)
+          loginButtonStatus.value = false;
+          countDown(60);
+          // console.log(res)
         }).catch(error => {
           console.log(error)
         })
@@ -217,17 +233,22 @@ export default {
        * 登录
        */
       const login = (() => {
-        let repuestData = {
+        let requestData = {
           username: ruleForm.username,
           password: sha1(ruleForm.password),
           code: ruleForm.code
         }
-        root.$store.dispatch('app/login', repuestData).then(response => {
-          // 页面跳转
-          root.$router.push({
-            name: 'Console'
-          })
-        }).catch(error => {});
+        root.$store.dispatch('app/login', requestData).then(res => {
+          // console.log("登录成功")
+          let data = res.data
+          root.$router.push({name: 'Console'})
+          // root.$store.dispatch('app/login', requestData).then(response => {
+          //   // 页面跳转
+          //   root.$router.push({
+          //     name: 'Console'
+          //   })
+          // }).catch(error => {});
+        }).catch(error => {})
       })
       /**
        * 注册

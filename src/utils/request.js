@@ -28,7 +28,7 @@ service.interceptors.request.use(function (config) {
   // 最终目地不是在请求头添加参数
   // config.headers['Tokey'] = getToKen()
   // config.headers['UserName'] = getUserName()
-
+  // console.log(config)
   return config;
 }, function (error) {
   // 对请求错误做些什么

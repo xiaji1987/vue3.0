@@ -11,7 +11,7 @@ export function setToKen(toKen){
     return cookie.set(adminToKen, toKen);
 }
 
-export function removeToKen(toKen){
+export function removeToKen(){
     return cookie.remove(adminToKen);
 }
 
