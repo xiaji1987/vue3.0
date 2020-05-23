@@ -1,4 +1,4 @@
- <template>
+<template>
   <div>
     <el-row :gutter="14">
       <el-col :span="4">
@@ -34,11 +34,11 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="4">
         <div class="label-wrap key-work">
           <label for>关键字：&nbsp;&nbsp;</label>
           <div class="warp-content">
-            <!-- <SelectVue :config="data.configOption" /> -->
+            <SelectVue :config="data.configOption" />
           </div>
         </div>
       </el-col>
@@ -68,13 +68,13 @@
       style="width: 100%"
     >
       <el-table-column type="selection" width="45"></el-table-column>
-      <el-table-column prop="title" label="标题" width="500"></el-table-column>
+      <el-table-column prop="title" label="标题" width="480"></el-table-column>
       <el-table-column prop="categoryId" label="类型" width="130" :formatter="toCategory"></el-table-column>
-      <el-table-column prop="date" label="日期" width="230" :formatter="toData"></el-table-column>
+      <el-table-column prop="createDate" label="日期" width="230" :formatter="toData"></el-table-column>
       <el-table-column prop="user" label="管理员" width="115"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" v-btnPerm="'info:del'" class="hiden-button">自定义指令测试</el-button>
+          <!-- <el-button type="danger" size="mini" v-btnPerm="'info:del'" class="hiden-button">自定义指令测试</el-button> -->
           <el-button
             type="danger"
             size="mini"
@@ -89,13 +89,13 @@
             v-btnPerm="'info:edit'"
             class="hiden-button"
           >编辑</el-button>
-          <el-button
+          <!-- <el-button
             type="success"
             size="mini"
             @click="detailed(scope.row)"
             v-btnPerm="'info:detailed'"
             class="hiden-button"
-          >编辑详情</el-button>
+          >编辑详情</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -119,30 +119,26 @@
     </el-row>
     <!--新增弹窗-->
     <DialogInfo :flag.sync="dialog_info" :category="options.category" />
-    <!--修必弹窗-->
-    <!-- <DialogEditInfo
-      :flag.sync="dialog_info_edit"
-      :id="infoId"
-      :category="options.category"
-      @getListEmit="getList"
-    /> -->
+    <!--修该弹窗-->
+    <DialogEditInfo :flag.sync="dialog_info_edit" :id="infoId" :category="options.category" @getListEmit="changeTitle" />
   </div>
 </template>
+
 <script>
 import { GetCategory, GetList, DeleteInfo } from "@/api/news";
 import DialogInfo from "./Components/info";
-// import DialogEditInfo from "./dialog/edit";
+import DialogEditInfo from "./Components/edit";
 import { global } from "@/utils/global";
-import { reactive, ref, onMounted } from "@vue/composition-api";
-// import { timestampToTime } from "@/utils/common";
+import { reactive, ref, watch, onMounted, computed } from "@vue/composition-api";
+import { timestampToTime } from "@/utils/common";
 // 组件
-// import SelectVue from "@c/Select";
+import SelectVue from "./Components/selectVue";
 export default {
   name: "infoIndex",
-  components: { DialogInfo},
+  components: { DialogInfo, DialogEditInfo, SelectVue },
+  // components: { DialogInfo, DialogEditInfo },
   setup(props, { root }) {
-    const { str, confirm } = global();
-    // console.log(str.value)
+    const { str: aaa, confirm } = global();
     /**
      * 数据
      */
@@ -177,18 +173,7 @@ export default {
     });
     // 表格数据
     const table_data = reactive({
-      item: [{
-        title: '123',
-        categoryId: '11',
-        date: '15',
-        user: '14'
-      },
-      {
-        title: '123',
-        categoryId: '11',
-        date: '15',
-        user: '14'
-      }]
+      item: []
     });
     /**
      * vue2.0 methods
@@ -234,17 +219,18 @@ export default {
       // 预先存值
       // root.$store.commit("infoDetailed/SET_ID", data.id);
       // root.$store.commit("infoDetailed/SET_TITLE", data.title);
-      // root.$store.commit("infoDetailed/UPDATE_STATE_VALUE", {
-      //   id: {
-      //     value: data.id,
-      //     sessionKey: "infoId",
-      //     session: true
-      //   },
-      //   title: {
-      //     value: data.title,
-      //     sessionKey: "infoTitle",
-      //     session: true
-      //   }});
+      root.$store.commit("infoDetailed/UPDATE_STATE_VALUE", {
+        id: {
+          value: data.id,
+          sessionKey: "infoId",
+          session: true
+        },
+        title: {
+          value: data.title,
+          sessionKey: "infoTitle",
+          session: true
+        }
+      });
       // 跳转页面
       root.$router.push({
         name: "InfoDetailed",
@@ -254,32 +240,31 @@ export default {
         }
       });
     };
-
     const getList = () => {
       // 单独处理数据
       let requestData = formatData();
       // 加载状态
-      // loadingData.value = true;
-      // GetList(requestData)
-      //   .then(response => {
-      //     let data = response.data.data;
-      //     // 更新数据
-      //     table_data.item = data.data;
-      //     // 页面统计数据
-      //     total.value = data.total;
-      //     // 加载状态
-      //     loadingData.value = false;
-      //   })
-      //   .catch(error => {
-      //     loadingData.value = false;
-      //   });
+      loadingData.value = true;
+      GetList(requestData)
+        .then(response => {
+          let data = response.data.data;
+          // console.log(data)
+          // 更新数据
+          table_data.item = data.data;
+          // 页面统计数据
+          total.value = data.total;
+          // 加载状态
+          loadingData.value = false;
+        })
+        .catch(error => {
+          loadingData.value = false;
+        });
     };
     /**
      * 删除数据
      */
     const deleteItem = id => {
-      // console.log('123')
-      // deleteInfoId.value = [id];
+      deleteInfoId.value = [id];
       confirm({
         content: "确认删除当前信息，确认后将无法恢复！！",
         tip: "警告",
@@ -287,7 +272,6 @@ export default {
       });
     };
     const deleteAll = () => {
-      // vue2.0全局函数 this.func()
       if (!deleteInfoId.value || deleteInfoId.value.length == 0) {
         root.$message({
           message: "请选择要删除的数据！！",
@@ -301,7 +285,6 @@ export default {
         fn: confirmDelete
       });
     };
-
     const confirmDelete = value => {
       DeleteInfo({ id: deleteInfoId.value }).then(response => {
         deleteInfoId.value = "";
@@ -310,7 +293,8 @@ export default {
     };
     const getInfoCategory = () => {
       root.$store.dispatch("common/getInfoCategory").then(response => {
-        options.category = response;
+        const categoryType = response.data.data
+        options.category = categoryType.data;
       });
     };
     const toData = (row, column, cellValue, index) => {
@@ -328,7 +312,21 @@ export default {
       let id = val.map(item => item.id);
       deleteInfoId.value = id;
     };
-    const btnPerm = () => {return true}
+    const btnPerm = () => {
+      return true
+    }
+    const changeTitle = (newData) => {
+      // console.log(table_data.item)
+
+      // console.log(infoId.value)
+      console.log(newData)
+      table_data.item.forEach((item) => {
+        if(item.id == infoId.value) {
+          item.title = newData.newTitle
+          return
+        }
+      })
+    }
     /**
      * 生命周期
      */
@@ -365,7 +363,8 @@ export default {
       getList,
       editInfo,
       detailed,
-      btnPerm
+      btnPerm,
+      changeTitle
     };
   }
 };
@@ -386,7 +385,7 @@ export default {
 </style>
 <style>
 button.hiden-button {
-  display: none;
+  display: inline-block;
 }
 button.show-button {
   display: inline-block;

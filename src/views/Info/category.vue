@@ -65,7 +65,7 @@
 </template>
 <script>
 import { AddFristCategory, GetCategory, DeleteCategory, EditCategory, AddChildrenCategory } from "@/api/news";
-import { reactive, ref, onMounted, watch } from "@vue/composition-api";
+import { reactive, ref, onMounted, watchEffect } from "@vue/composition-api";
 import { global } from "@/utils/global";
 import { common } from "@/api/common";
 export default {
@@ -74,6 +74,7 @@ export default {
     // global
     const { confirm } = global();
     const { getInfoCategory, getInfoCategoryAll, categoryItem } = common();
+    console.log(categoryItem)
     /**
      * reactive
      */
@@ -120,6 +121,7 @@ export default {
       submit_button_loading.value = true;
       AddFristCategory({ categoryName: form.categoryName })
         .then(response => {
+          // console.log(response)
           let data = response.data;
           if (data.resCode === 0) {
             root.$message({
@@ -131,7 +133,7 @@ export default {
              * 1、请求接获取分类接口（缺点：浪费资源）
              * 2、直接push，请求接口后返回的数据
              */
-            category.item.push(response.data.data);
+            category.item.push(data.data);
             // 数组的方法，添加数组末尾
           }
           submit_button_loading.value = false;
@@ -274,8 +276,9 @@ export default {
     /**
      * watch
      */
-    watch(() => categoryItem.item,
+    watchEffect(() => categoryItem.item,
       value => {
+        console.log(value)
         category.item = value;
       }
     );
