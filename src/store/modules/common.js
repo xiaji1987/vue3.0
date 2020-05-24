@@ -1,5 +1,12 @@
 import { GetCategory } from "@/api/news";
 
+const state = {
+  qiniuUrl: "http://qasf8jmkn.bkt.clouddn.com"
+}
+const getters = {
+  qiniuUrl: state => state.qiniuUrl
+}
+
 const actions = {
   getInfoCategory(conntent, requestData) {
     return new Promise((resolve, reject) => {
@@ -14,5 +21,7 @@ const actions = {
 
 export default {
   namespaced: true,
-  actions
+  state,
+  actions,
+  getters
 }

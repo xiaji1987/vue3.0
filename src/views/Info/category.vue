@@ -65,7 +65,7 @@
 </template>
 <script>
 import { AddFristCategory, GetCategory, DeleteCategory, EditCategory, AddChildrenCategory } from "@/api/news";
-import { reactive, ref, onMounted, watchEffect } from "@vue/composition-api";
+import { reactive, ref, onMounted, watch } from "@vue/composition-api";
 import { global } from "@/utils/global";
 import { common } from "@/api/common";
 export default {
@@ -74,7 +74,7 @@ export default {
     // global
     const { confirm } = global();
     const { getInfoCategory, getInfoCategoryAll, categoryItem } = common();
-    console.log(categoryItem)
+    // console.log(categoryItem)
     /**
      * reactive
      */
@@ -276,9 +276,9 @@ export default {
     /**
      * watch
      */
-    watchEffect(() => categoryItem.item,
+    watch(() => categoryItem.item,
       value => {
-        console.log(value)
+        // console.log(categoryItem.item)
         category.item = value;
       }
     );

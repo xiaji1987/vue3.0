@@ -68,9 +68,9 @@
       style="width: 100%"
     >
       <el-table-column type="selection" width="45"></el-table-column>
-      <el-table-column prop="title" label="标题" width="480"></el-table-column>
+      <el-table-column prop="title" label="标题" width="400"></el-table-column>
       <el-table-column prop="categoryId" label="类型" width="130" :formatter="toCategory"></el-table-column>
-      <el-table-column prop="createDate" label="日期" width="230" :formatter="toData"></el-table-column>
+      <el-table-column prop="createDate" label="日期" width="180" :formatter="toData"></el-table-column>
       <el-table-column prop="user" label="管理员" width="115"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -89,13 +89,13 @@
             v-btnPerm="'info:edit'"
             class="hiden-button"
           >编辑</el-button>
-          <!-- <el-button
+          <el-button
             type="success"
             size="mini"
             @click="detailed(scope.row)"
             v-btnPerm="'info:detailed'"
             class="hiden-button"
-          >编辑详情</el-button> -->
+          >编辑详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -136,7 +136,6 @@ import SelectVue from "./Components/selectVue";
 export default {
   name: "infoIndex",
   components: { DialogInfo, DialogEditInfo, SelectVue },
-  // components: { DialogInfo, DialogEditInfo },
   setup(props, { root }) {
     const { str: aaa, confirm } = global();
     /**
@@ -251,6 +250,7 @@ export default {
           // console.log(data)
           // 更新数据
           table_data.item = data.data;
+          // console.log(table_data)
           // 页面统计数据
           total.value = data.total;
           // 加载状态
@@ -301,11 +301,13 @@ export default {
       return timestampToTime(row.createDate);
     };
     const toCategory = row => {
+      // console.log(row)
       // 调用一个函数，返回一个新的值，替换原始值
       let categoryId = row.categoryId;
       let categoryData = options.category.filter(
         item => item.id == categoryId
       )[0];
+      // console.log(categoryData)
       return categoryData.category_name;
     };
     const handleSelectionChange = val => {
@@ -319,7 +321,7 @@ export default {
       // console.log(table_data.item)
 
       // console.log(infoId.value)
-      console.log(newData)
+      // console.log(newData)
       table_data.item.forEach((item) => {
         if(item.id == infoId.value) {
           item.title = newData.newTitle
