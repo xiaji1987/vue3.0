@@ -33,7 +33,7 @@
 
 <script>
 import { AddInfo } from "@/api/news";
-import { reactive, ref, watchEffect } from "@vue/composition-api";
+import { reactive, ref, watchEffect, emit } from "@vue/composition-api";
 export default {
   name: "dialogInfo",
   props: {
@@ -120,6 +120,7 @@ export default {
           data.submitLoading = false;
           // 重置表单
           resetForm();
+          emit
           // root.$refs['addInfoForm'].resetFields();
         })
         .catch(error => {
