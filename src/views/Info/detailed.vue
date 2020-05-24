@@ -37,7 +37,8 @@
 import { GetList, EdidInfo } from '@/api/news'
 import { timestampToTime } from "@/utils/common"
 import { ref, reactive, onMounted, onActivated } from "@vue/composition-api";
-import { QiniuToken } from '@/api/common'
+// import { QiniuToken } from '@/api/common'
+import UploadImg from '@/components/UploadImg/index'
 
 import { quillEditor } from 'vue-quill-editor'
 // require styles
@@ -48,13 +49,13 @@ import 'quill/dist/quill.bubble.css'
 
 export default {
   name: "infoDetailed",
-  components: { quillEditor },
+  components: { quillEditor, UploadImg },
   setup(props, { root }) {
     const uploadImgConfig = reactive({
       action: "http://up-z2.qiniup.com",
-      accesskey: "Avh-EZZAa4TxqPQZsEW42fXBUbTMFi-RKSZTRKJj",
-      secretkey: "l9AXtnhCVkZexXNRcmHXzmecXiCUiLynwGboMeUw",
-      buckety: "webjshtml"
+      accesskey: "EngPeaLEEN5Mx7JLaUys8NNonX_iuxSdVblQEIMb",
+      secretkey: "4_9RRUZakrG_xdOnI-vOvccF-sBknVxIjULObalw",
+      buckety: "vue3admit-photo"
     });
 
     const data = reactive({
@@ -91,7 +92,7 @@ export default {
         id: data.id
       };
       GetList(requestData).then(response => {
-        console.log(response.data.data.data[0])
+        // console.log(response.data.data.data[0])
         let responseData = response.data.data.data[0];
         form.categoryId = responseData.categoryId;
         form.title = responseData.title;
@@ -154,27 +155,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
+
 </style>

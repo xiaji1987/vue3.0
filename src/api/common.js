@@ -33,7 +33,7 @@ export function common() {
 export function QiniuToken(data) {
   return service.request({
     methods: 'post',
-    url: 'uploadImgToken',
+    url: '/uploadImgToken/',
     data
   })
 }
