@@ -50,6 +50,7 @@ export default {
         if (arr.length > 0) {
           optionArr.push(arr[0]);
         }
+        // console.log(arr)
       });
       // 数据检验
       if (optionArr.length === 0) {
