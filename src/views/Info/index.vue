@@ -114,6 +114,7 @@
           :page-sizes="[10, 20, 50, 100]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+          @getListEmit="getList"
         ></el-pagination>
       </el-col>
     </el-row>

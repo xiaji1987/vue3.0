@@ -119,8 +119,8 @@ export default {
           });
           data.submitLoading = false;
           // 重置表单
-          resetForm();
-          emit
+          close();
+          emit('getListEmit')
           // root.$refs['addInfoForm'].resetFields();
         })
         .catch(error => {
