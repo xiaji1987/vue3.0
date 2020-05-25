@@ -74,6 +74,7 @@ export default {
   setup(props, { root, emit }) {
     // 加载数据
     const { tableData, tableLoadData } = loadData({ root });
+    // console.log(tableData)
     // 页码
     const {
       pageData,

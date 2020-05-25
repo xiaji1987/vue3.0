@@ -51,6 +51,7 @@
       :editData="data.editData"
       @refreshTabelData="refreshData"
     />
+    <!-- <A attrsA="爷爷传给A" attrsB="爷爷传给B" v-on:update="updateNum"/> -->
   </div>
 </template>
 <script>
@@ -62,6 +63,7 @@ import TableVue from "@/components/Table";
 import DialogAdd from "./dialog/add";
 // 3.0抽离的方法
 import { global } from "@/utils/global";
+// import A from './a'
 export default {
   name: "userIndex",
   components: { SelectVue, TableVue, DialogAdd },
@@ -76,7 +78,7 @@ export default {
       dialog_edit: false,
       editData: {},
       configOption: {
-        init: ["name", "phone"]
+        init: ["truename", "phone"]
       },
       // 下接菜单的数据
       selectData: {},
@@ -153,6 +155,9 @@ export default {
         fn: userDelete
       });
     };
+    // const updateNum = () => {
+    //   console.log(456789)
+    // }
     // 删除用户
     const userDelete = () => {
       UserDel({ id: data.tableRow.idItem }).then(response => {
@@ -179,7 +184,29 @@ export default {
     /**
      * 添加用户
      */
+
+    // const showNumber = () => {
+    //   let A = {
+    //     a: 1,
+    //     b: {
+    //       c: 2,
+    //       d: {
+    //         e: 3
+    //       }
+    //     }
+    //   };
+      
+    //   let copyA = JSON.parse(JSON.stringify(A))
+    //   // console.log('修改之前', A)
+    //   copyA.a = 4;
+    //   copyA.b.c = 5;
+    //   copyA.b.d.e = 6;
+    //   console.log(A);
+    //   console.log(copyA);
+    // };
+
     const handlerAdd = () => {
+      // showNumber();
       data.dialog_add = true;
       // 子组件赋值
       data.editData = Object.assign({});
@@ -222,7 +249,8 @@ export default {
       handlerSwitch,
       handlerEdit,
       handlerAdd,
-      search
+      search,
+      // updateNum
     };
   }
 };

@@ -9,7 +9,7 @@
         {{username}}
         <!-- {{ username }} -->
       </div>
-      <div class="header-icon pull-left" @click="exit()">
+      <div class="header-icon pull-left" @click="logout">
         <svg-icon iconClass="exit" class="exit" />
       </div>
     </div>
@@ -26,15 +26,23 @@ export default {
       root.$store.commit('app/SET_COLLAPSE')
     }
 
-    const exit = () => {
-      root.$store.dispatch('app/exit').then(res => {
-        root.$router.push({name: 'Login'})
+    const logout = () => {
+      root.$store.dispatch('app/logout').then(res => {
+        // root.$router.push({name: 'Login'})
+        // console.log(res)
+        if(res.resCode == 0) {
+          root.$message({
+            message: '退出成功',
+            type: 'success'
+          })
+          root.$router.push({name: 'Login'})
+        }
       })
     }
     return {
       navMenuState,
       username,
-      exit
+      logout
     }
   }
 };

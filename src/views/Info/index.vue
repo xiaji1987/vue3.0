@@ -120,7 +120,12 @@
     <!--新增弹窗-->
     <DialogInfo :flag.sync="dialog_info" :category="options.category" />
     <!--修该弹窗-->
-    <DialogEditInfo :flag.sync="dialog_info_edit" :id="infoId" :category="options.category" @getListEmit="changeTitle" />
+    <DialogEditInfo
+      :flag.sync="dialog_info_edit"
+      :id="infoId"
+      :category="options.category"
+      @getListEmit="changeTitle"
+    />
   </div>
 </template>
 
@@ -129,7 +134,13 @@ import { GetCategory, GetList, DeleteInfo } from "@/api/news";
 import DialogInfo from "./Components/info";
 import DialogEditInfo from "./Components/edit";
 import { global } from "@/utils/global";
-import { reactive, ref, watch, onMounted, computed } from "@vue/composition-api";
+import {
+  reactive,
+  ref,
+  watch,
+  onMounted,
+  computed
+} from "@vue/composition-api";
 import { timestampToTime } from "@/utils/common";
 // 组件
 import SelectVue from "./Components/selectVue";
@@ -293,7 +304,7 @@ export default {
     };
     const getInfoCategory = () => {
       root.$store.dispatch("common/getInfoCategory").then(response => {
-        const categoryType = response.data.data
+        const categoryType = response.data.data;
         options.category = categoryType.data;
       });
     };
@@ -301,34 +312,32 @@ export default {
       return timestampToTime(row.createDate);
     };
     const toCategory = row => {
-      // console.log(row)
       // 调用一个函数，返回一个新的值，替换原始值
       let categoryId = row.categoryId;
-      let categoryData = options.category.filter(
-        item => item.id == categoryId
-      )[0];
+      // console.log(options)
+      // console.log(categoryId)
+      let categoryData = options.category.filter(item => item.id == categoryId)[0];
       // console.log(categoryData)
+      if(!categoryData) {return false}
       return categoryData.category_name;
     };
+
     const handleSelectionChange = val => {
       let id = val.map(item => item.id);
       deleteInfoId.value = id;
     };
-    const btnPerm = () => {
-      return true
-    }
-    const changeTitle = (newData) => {
+    const changeTitle = newData => {
       // console.log(table_data.item)
 
       // console.log(infoId.value)
       // console.log(newData)
-      table_data.item.forEach((item) => {
-        if(item.id == infoId.value) {
-          item.title = newData.newTitle
-          return
+      table_data.item.forEach(item => {
+        if (item.id == infoId.value) {
+          item.title = newData.newTitle;
+          return;
         }
-      })
-    }
+      });
+    };
     /**
      * 生命周期
      */
@@ -365,7 +374,6 @@ export default {
       getList,
       editInfo,
       detailed,
-      btnPerm,
       changeTitle
     };
   }

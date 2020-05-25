@@ -35,7 +35,7 @@
           >{{ item.name }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="按钮：" :label-width="data.formLabelWidth">
+      <el-form-item label="按钮权限：" :label-width="data.formLabelWidth">
         <template v-if="data.btnPerm.length > 0">
           <div v-for="(item, index) in data.btnPerm" :key="index">
             <h4>{{ item.name }}</h4>
@@ -169,6 +169,7 @@ export default {
       // if(data.roleItem.length > 0 && data.btnPerm.length > 0) { return false }
       if (data.roleItem.length === 0) {
         GetRole().then(response => {
+          // console.log(response)
           data.roleItem = response.data.data;
         });
       }

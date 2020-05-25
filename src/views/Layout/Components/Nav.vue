@@ -3,7 +3,7 @@
     <div class="logo">
       <img src="../../../assets/logo.png" alt="" >
     </div>
-    <el-menu default-active="1-4-1" class="el-menu-vertical-demo" :collapse="isCollapse" background-color="transparent" text-color="#fff" active-text-color="#fff" router>
+    <el-menu :default-active="defaultActive" class="el-menu-vertical-demo" :collapse="isCollapse" background-color="transparent" text-color="#fff" active-text-color="#fff" router>
       <template v-for="(item, index) in routers">
         <el-submenu  :key="item.id" v-if="!item.hidden"  :index="index + ''">
           <template slot="title">
@@ -27,12 +27,19 @@ export default {
     // const isCollapse = ref(false)
 
     const routers = reactive(root.$router.options.routes)
+    const defaultActive = computed(() => {
+      const route = root.$route
+      // console.log(route)
+      const { path } = route
+      return path
+    })
     // console.log(routers)
     const isCollapse = computed(() => root.$store.state.app.isCollapse)
     // console.log(root.$store.state.isCollapse)
     return {
       isCollapse,
-      routers
+      routers,
+      defaultActive
     }
   }
 };

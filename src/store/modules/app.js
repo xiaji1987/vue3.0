@@ -1,23 +1,36 @@
-import { Login } from '@/api/login'
-import { setToKen, setUserName, getUserName, removeToKen, removeUserName } from '@/utils/app'
-
+import { Login, logout } from "@/api/login";
+import { setToKen, removeToKen, removeUserName, setUserName, getUserName } from "@/utils/app";
 const state = {
+  roles: [],
+  buttonPermission: [],
   isCollapse: JSON.parse(sessionStorage.getItem('isCollapse')) || false,
   to_ken: '',
   username: getUserName() || ''
 }
 
-const mutations = {
+const getters = {
+  isCollapse: state => state.isCollapse,
+  roles: state => state.roles,
+  buttonPermission: state => state.buttonPermission
+}
+
+const mutations = {  // 必须的  同步 没有回调处理事情
   SET_COLLAPSE(state) {
-    state.isCollapse = !state.isCollapse
-    sessionStorage.setItem('isCollapse', JSON.stringify(state.isCollapse))
-    // cookie.set('isCollapse', JSON.stringify(state.isCollapse))
+    state.isCollapse = !state.isCollapse;
+    // html5本地储存
+    sessionStorage.setItem('isCollapse', JSON.stringify(state.isCollapse));
   },
   SET_TOKEN(state, value) {
     state.to_ken = value
   },
   SET_USERNAME(state, value) {
     state.username = value
+  },
+  SET_ROLES(state, value) {
+    state.roles = value;
+  },
+  SET_BUTTON(state, value) {
+    state.buttonPermission = value;
   }
 }
 
@@ -26,7 +39,6 @@ const actions = {  // 可以回调处理事情
     return new Promise((resolve, reject) => {
       Login(repuestData).then((response) => {
         let data = response.data.data
-        // console.log(data, '---')
         // 普通的
         // content.commit('SET_TOKEN', data.toKen);
         // content.commit('SET_USERNAME', data.username);
@@ -41,26 +53,27 @@ const actions = {  // 可以回调处理事情
       })
     })
   },
-  exit({commit}) {
-    removeToKen(),
-    removeUserName()
-    commit('SET_TOKEN', '')
-    commit('SET_USERNAME', '')
+  logout({ commit }) {
     return new Promise((resolve, reject) => {
-      resolve()
+      logout().then(res => {
+        // console.log(res)
+        const data =  res.data
+        removeToKen();
+        removeUserName();
+        commit('SET_TOKEN', '');
+        commit('SET_USERNAME', '');
+        commit('SET_ROLES', []);
+        resolve(data);
+      })
     })
   }
 }
 
-const getters = {
-  isCollapse: state => state.isCollapse,
-  username: state => state.username
-}
 
 export default {
   namespaced: true,
   state,
+  getters,
   mutations,
-  actions,
-  getters
-}
+  actions
+};

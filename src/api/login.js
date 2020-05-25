@@ -17,6 +17,14 @@ export function getUserRole(data = {}) {
   })
 }
 
+export function logout(data = {}) {
+  return service.request({
+    method: 'post',
+    url: '/logout/',
+    data
+  })
+}
+
 export function Login(data) {
   return service.request({
     method: "post",
